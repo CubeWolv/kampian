@@ -1,0 +1,74 @@
+<style>
+    .title-for-footer{
+        font-size: 40px;
+        margin-top: 20px;
+        border-bottom: 2px solid #FAD201;
+        text-align: center;
+    }
+
+    .footer {
+      background-color: rgb(0, 219, 0);
+      color: white;
+      padding: 20px;
+      clear: both;
+      margin-top:100px;
+    }
+
+    .the-footer-fluid{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer a {
+      color: white;
+      text-decoration: none;
+      margin-bottom: 10px;
+      display: block;
+      margin-left:20px;
+      margin-right:20px;
+    }
+
+    .social-icons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%; /* Ensures the icons are spaced out across the entire width */
+    }
+
+    .social-icons a {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .footer {
+        align-items: center;
+        text-align: center;
+      }
+
+      .social-icons {
+        justify-content: flex-start;
+        flex-wrap: wrap; /* Allows icons to wrap to the next line on smaller screens */
+      }
+
+      .social-icons a {
+        margin: 0 10px 10px 0;
+      }
+      .footer a {
+      margin-left:10px;
+      margin-right:10px;
+      font-size:14px;
+    }
+    }
+  </style>
+<div class="footer">
+
+    <div class="the-footer-fluid">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'contact' %}">Contact</a>
+    <a href="{% url 'about' %}">About</a>
+    <a href="{% url 'termsofuse' %}">Terms of use</a>
+
+  </div>

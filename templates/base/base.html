@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block header %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  {% endblock header %}
+</head>
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'images/logock.png' %}"></a>
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+              </li>
+
+
+
+              {% if user.is_authenticated %}
+            
+                  {% else %}
+                    
+                  
+
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+              </li>
+              {% endif %}
+
+            </ul>
+            {% if user.is_authenticated %}
+            <a href="{% url 'addpdf' %}"><button class="btn btn-outline-success upload-nav" type="submit">UPLOAD</button></a>
+                  {% else %}
+              <a href="{% url 'login' %}"><button class="btn btn-outline-success upload-nav" type="submit">UPLOAD</button></a>
+          {% endif %}
+
+            </div>
+        </div>
+      </nav>
+
+
+
+
+
+
+
+
+
+<style>
+  body{
+    margin:0px;
+    padding:0px;
+    font-family: "poppins",sans-serif;
+  }
+    .navbar{
+        height: 80px;
+        padding:10px;
+        font-size: 17px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+    .navbar-brand img{
+        height: 40px;
+    }
+
+    @media(max-width:990px){
+      .navbar{
+        height: 70px;
+      }
+      .upload-nav{
+        display: none;
+      }
+      .navbar-collapse{
+        background-color: white;
+        z-index: 100;
+        margin-top:15px;
+      }
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% block content %}
+
+{% endblock %}
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
