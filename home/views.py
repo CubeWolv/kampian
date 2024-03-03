@@ -4,14 +4,24 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from .forms import SignupForm
-from django.contrib.auth.decorators import login_required
 from pdf.models import Pdf
+from django.db.models import Q
 
 
 # Create your views here.
 def home(request):
+    query = request.GET.get('q')
     pdf_files = Pdf.objects.all()
-    return render(request, './home/home.html', {'pdf_files': pdf_files})
+
+    if query:
+        pdf_files = pdf_files.filter(
+            Q(title__icontains=query) |
+            Q(author__username__icontains=query) |
+            Q(product_type__icontains=query)
+            # Adjust 'username' to the actual field on the User model you want to search on
+        )
+
+    return render(request, './home/home.html', {'pdf_files': pdf_files, 'query': query})
 
 def signup(request):
     if request.method == 'POST':
