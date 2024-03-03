@@ -43,7 +43,7 @@
     }
 
     .container-for-form input:focus {
-    border: 1px solid #FAD201; 
+    border: 1px solid lime; 
     transition: 0.3s ease-out;
 }
 
@@ -68,7 +68,7 @@
 
 
     .the-other-join-link{
-        border-bottom: 1px solid #FAD201;
+        border-bottom: 1px solid grey;
         color:black;
         text-decoration: none;
     }

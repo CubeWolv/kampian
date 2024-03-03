@@ -1,5 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load humanize %}
+
 
 
 {% block header %}
@@ -21,7 +23,7 @@
   rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital@0;1&display=swap" rel="stylesheet">
 
-{% endblock header %}
+{% endblock header %} 
 
 {% block content %}
 
@@ -29,12 +31,16 @@
 <h1 class="mengo-hub">MENGO HUB</h1>
 
 
+
+
+
+
 <div class="fluid-for-search-form">
-<form class="fluid-form for-search">
+<form  method="GET" class="fluid-form for-search">
   <div class="dropdown" id="dropdown1">
     <div class="flex-search">
-    <input type="text" class="dropdown-input" placeholder="Search for PDF" onclick="toggleDropdown('dropdownList1')">
-    <span class="material-symbols-outlined">
+    <input type="text" class="dropdown-input"  name="q" placeholder="Search for PDF" onclick="toggleDropdown('dropdownList1')">
+    <span class="material-symbols-outlined" type="submit">
       search
       </span>
       </div>
@@ -71,26 +77,42 @@
   </form>
 </div>
 
-  <script>
-    function toggleDropdown(dropdownId) {
-      var dropdownList = document.getElementById(dropdownId);
-      dropdownList.style.display = (dropdownList.style.display === 'block') ? 'none' : 'block';
+<script>
+  function toggleDropdown(dropdownId) {
+    var dropdownList = document.getElementById(dropdownId);
+    dropdownList.style.display = (dropdownList.style.display === 'block') ? 'none' : 'block';
+  }
+
+  function selectOption(option, dropdownId) {
+    var dropdownInput = document.getElementById(dropdownId).querySelector('.dropdown-input');
+
+    if (option === 'Your location') {
+      // Get location and update input
+      getLocationAndSetInput(dropdownInput);
+    } else {
+      // For other options, just set the input value
+      dropdownInput.value = option;
+      toggleDropdown('dropdownList1');
     }
-  
-    function selectOption(option, dropdownId) {
-      var dropdownInput = document.getElementById(dropdownId).querySelector('.dropdown-input');
-  
-      if (option === 'Your location') {
-        // Get location and update input
-        getLocationAndSetInput(dropdownInput);
+  }
+
+  function filterOptions() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("dropdownList1");
+    li = ul.getElementsByTagName("li");
+
+    for (i = 0; i < li.length; i++) {
+      a = li[i];
+      if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        li[i].style.display = "";
       } else {
-        // For other options, just set the input value
-        dropdownInput.value = option;
-        toggleDropdown('dropdownList1');
-        toggleDropdown('dropdownList2') // Close the dropdown after selection, modify as needed
+        li[i].style.display = "none";
       }
     }
-    </script>
+  }
+</script>
 
 
 
@@ -100,21 +122,39 @@
 
 
 <div class="pdf-container">
-  {% for pdf_file in pdf_files %}
+  {% if pdf_files %}
+    {% for pdf_file in pdf_files %}
       <div class="each-pdf">
-          <strong>{{ pdf_file.title }}</strong>
-          
-          <a href="{{ pdf_file.pdf_file.url }}" target="_blank" class="downloadpdf">
+        <strong>{{ pdf_file.title }}</strong>
+        <a href="{{ pdf_file.pdf_file.url }}" target="_blank" class="downloadpdf">
           <span class="material-symbols-outlined">
             download
-            </span>
-            </a>
+          </span>
+          </a>
+
+
+          <div class="the-bottom-box">
+          <p><b>{{ pdf_file.author }}</b>  <span style="margin-left:20px;">{{ pdf_file.created_on|timesince }}</span></p>
+        </div>
+       
       </div>
-  {% endfor %}
+    {% endfor %}
+  {% else %}
+    <p>No PDFs found for '{{ query }}'</p>
+  {% endif %}
 </div>
 
 
+
 <style>
+  .the-bottom-box{
+    position: relative;
+    top:16px;
+    font-size: 13px;
+  }
+  .the-bottom-box b{
+    color: grey;
+  }
   .pdf-container{
     position:relative;
     left:50%;
@@ -124,9 +164,10 @@
     z-index: 0;
   }
   .each-pdf{
-    border:1px solid lime;
+    border:1px solid rgb(136, 136, 136);
     padding:15px;
     border-radius: 6px;
+    margin-bottom:10px;
   }
 
   .downloadpdf{
@@ -241,6 +282,12 @@ box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;      list-style-type: none;
 @media(max-width:500px){
   .for-search{
     width:80%;
+  }
+  .pdf-container{
+  width:90%;}
+  .downloadpdf{
+    position: relative;
+    top:0px;
   }
 }
 </style>
