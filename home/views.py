@@ -9,7 +9,12 @@ from django.db.models import Q
 
 
 # Create your views here.
+
+
 def home(request):
+    return render(request , './home/home.html')
+
+def pdfview(request):
     query = request.GET.get('q')
     pdf_files = Pdf.objects.all()
 
@@ -21,7 +26,9 @@ def home(request):
             # Adjust 'username' to the actual field on the User model you want to search on
         )
 
-    return render(request, './home/home.html', {'pdf_files': pdf_files, 'query': query})
+    return render(request, './pdfview/pdfview.html', {'pdf_files': pdf_files, 'query': query})
+
+
 
 def signup(request):
     if request.method == 'POST':
@@ -30,6 +37,11 @@ def signup(request):
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+
+            # Check if the username already exists
+            if User.objects.filter(username=username).exists():
+                messages.error(request, 'User already exists.')
+                return render(request, './join/signup.html', {'form': form})
 
             # Create a new user
             user = User.objects.create_user(username=username, email=email, password=password)
@@ -42,9 +54,7 @@ def signup(request):
     else:
         form = SignupForm()
 
-    return render(request, './join/signup.html' , {'form': form})
-
-
+    return render(request, './join/signup.html', {'form': form})
 
 
 def login(request):
@@ -76,6 +86,12 @@ def login(request):
 
 
 
+def custom_logout(request):
+    logout(request)
+    return redirect('home')
+
+
+
 def contact(request):
     return render(request, './others/contact.html')
 
@@ -84,3 +100,7 @@ def aboutus(request):
 
 def termsofuse(request):
     return render(request, './others/termsofuse.html')
+
+def video(request):
+    return render(request, './video/video.html')
+

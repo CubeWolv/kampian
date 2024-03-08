@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pdf.apps.PdfConfig',
+    'updates.apps.UpdatesConfig',
     'django.contrib.humanize',
 ]
 
@@ -137,3 +138,7 @@ EMAIL_USE_TLS = True
 EMAIL_PORT =587
 EMAIL_HOST_USER = 'afflex.marketing@gmail.com'
 EMAIL_HOST_PASSWORD = 'okvs ygcq hejs ovkt'
+
+
+
+LOGIN_URL = 'login'

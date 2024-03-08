@@ -32,13 +32,19 @@
         {{ form.password }}
 
         <input type="text" id="codeInput" placeholder="Code to Enter" oninput="checkCode()">
+
+
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="text-align: center; color: red;list-style: none;margin-left:-35px;">{{ message }}</li>
+    {% endfor %}
+    
         <input type="submit" id="signupButton" value="Signup" disabled>
     
         <center><a href="{% url 'login' %}" class="the-other-join-link">LOGIN</a></center>
         <label class="agreeing-to-the-policy">By signing in or signing up , you agree with our Privacy Policy</label>
     
     </form>
-    
+     
     
     </div>
 

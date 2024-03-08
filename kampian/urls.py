@@ -25,6 +25,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('' ,include('home.urls')),
     path('' , include ('pdf.urls')),
+    path('', include('chat.urls')),
+    path('', include('updates.urls')),
+    
 
 
 

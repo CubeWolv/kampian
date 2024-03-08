@@ -9,19 +9,21 @@
 </head>
 <body>
 
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="dark-mode-for-nav">
+    <nav class="navbar navbar-expand-lg navbar-light ">
         <div class="container-fluid">
           <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'images/logock.png' %}"></a>
 
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+          <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="material-symbols-outlined menu-bar">
+              menu
+              </span>
+        </button>
           <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
             
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                <a class="nav-link" aria-current="page" href="{% url 'home' %}">Home</a>
               </li>
 
 
@@ -44,21 +46,112 @@
               {% endif %}
 
             </ul>
-            {% if user.is_authenticated %}
-            <a href="{% url 'addpdf' %}"><button class="btn btn-outline-success upload-nav" type="submit">UPLOAD</button></a>
-                  {% else %}
-              <a href="{% url 'login' %}"><button class="btn btn-outline-success upload-nav" type="submit">UPLOAD</button></a>
-          {% endif %}
-
+                <span  onclick="toggleDarkMode()" class="material-symbols-outlined darkmode">
+              contrast
+              </span>
             </div>
         </div>
       </nav>
+      </div>
+<style>
+  .darkmode{
+    cursor: pointer;
+  }
+</style>
+
+
+<style>
+  /*-----------------darkmode---------------------*/
+  body.dark-mode {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        body.dark-mode .dark-mode-for-nav {
+    background-color: #19191a;
+    color: white;
+}
+        body.dark-mode .box-p {
+            color: #ffffff;
+        }
+        body.dark-mode .nav-item a{
+          color:white;
+        }
+        body.dark-mode .box-heading{
+          color:white;
+        }
+         body.dark-mode .option-contact{
+          box-shadow: rgba(255, 255, 255, 0.15) 1.95px 1.95px 2.6px;
+        }
+        body.dark-mode .dropdown-list-item{
+          color:black;
+        }
+        body.dark-mode .downloadpdf{
+          color:white;
+        }
+        body.dark-mode .container-for-form{
+          color:white;
+        }
+        body.dark-mode input{
+          color:white;
+        }
+        body.dark-mode .the-other-join-link{
+          color:white;
+        }
+         body.dark-mode .menu-bar{
+          color:white;
+        }
+        body.dark-mode .navbar-collapse{
+          background-color: #19191a;
+        }
+        body.dark-mode input{
+          color:white;
+        }
+        .white-button {
+    color: white;
+}
+</style>
 
 
 
 
 
+<script>
+  // script.js
 
+  // Function to toggle dark mode and save the user's preference
+  function toggleDarkMode() {
+      const body = document.body;
+      body.classList.toggle('dark-mode');
+
+      // Save the user's preference to local storage
+      const isDarkMode = body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDarkMode);
+
+      // Update the mode icon
+      updateModeIcon(isDarkMode);
+  }
+
+  // Function to update the mode icon
+  function updateModeIcon(isDarkMode) {
+      const modeIcon = document.getElementById('modeIcon');
+
+      // Change the Material Icon based on the dark mode state
+      modeIcon.textContent = isDarkMode ? 'nights_stay' : 'wb_sunny';
+  }
+
+  // Check if the user had dark mode preference and apply it
+  document.addEventListener('DOMContentLoaded', () => {
+      const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+
+      if (savedDarkMode) {
+          document.body.classList.add('dark-mode');
+      }
+
+      // Update the mode icon based on the initial dark mode state
+      updateModeIcon(savedDarkMode);
+  });
+
+</script>
 
 
 
@@ -68,6 +161,9 @@
     padding:0px;
     font-family: "poppins",sans-serif;
   }
+
+  
+ 
     .navbar{
         height: 80px;
         padding:10px;

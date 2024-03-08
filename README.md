@@ -1,2 +1,0 @@
-# kampian
-School connections 
