@@ -142,3 +142,5 @@ EMAIL_HOST_PASSWORD = 'okvs ygcq hejs ovkt'
 
 
 LOGIN_URL = 'login'
+
+os.environ['API_KEY'] = 'AIzaSyD3bCrwUKVjfnAwC55zVKyWKHnsHyykV7s'

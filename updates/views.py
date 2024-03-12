@@ -8,6 +8,10 @@ def updates(request):
     all_updates = Updates.objects.all() 
     return render(request, './updates/updates.html', {'updates': all_updates})
 
+def updatesview(request, update_id):
+    update = get_object_or_404(Updates, pk=update_id)
+    return render(request, './updates/updatesview.html', {'update': update})
+
 @login_required
 def addupdates(request):
     if request.method == 'POST':

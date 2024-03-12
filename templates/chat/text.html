@@ -107,14 +107,6 @@ $(document).ready(function () {
   }
 </style>
 
-
-<div id="chatContainer"  style="z-index: -1;">
-  {% if response_text_from_image %}
-  <p class="ai"><img class="img_logo_chat" src="{% static 'images/logo.png' %}"><strong>Kampian</strong><br>{{ response_text_from_image }}</p>
-  {% endif %}
-  </div>
-
-
 <div id="chatContainer">
   {% if user_input %}
   <div class="message user-message"><strong>You:</strong> {{ user_input }}</div>
@@ -154,24 +146,16 @@ $(document).ready(function () {
 
 <form method="post" id="chatFormimg" action="{% url 'chat' %}" class="formimage" enctype="multipart/form-data">
   {% csrf_token %}
-  
-  <label for="imageUpload" class="upload-icon">
-    <span class="material-symbols-outlined">drive_folder_upload</span>
-  </label>
-  <input type="file" id="imageUpload" name="imageUpload" accept="image/*" style="display: none;" onchange="submitForm()">
+  <div class="ai_image">
+    <label for="imageUpload">
+      <span style="cursor: pointer;" class="material-symbols-outlined">
+        drive_folder_upload
+      </span>
+    </label>
+    <input type="file" id="imageUpload" name="imageUpload" accept="image/*">
+  </div>
+  <button type="submit"><span class="material-symbols-outlined">arrow_forward</span></button>
 </form>
-
-<script>
-  function submitForm() {
-    document.getElementById("chatFormimg").submit();
-  }
-</script>
-
-
- 
-
-
-
 
 <style>
   #chatFormimg{
@@ -182,21 +166,21 @@ $(document).ready(function () {
    cursor:pointer;
   }
 
-  #chatFormimg span{
-    font-size: 30px;
-    cursor:pointer;
-  }
-
   @media(max-width:600px){
    .ai_image{
     top:15%;
    }
-   #chatFormimg{
-   top:10%;
-  }
   }
 
+  #imageUpload {
+    display: none;
+  }
 
+  /* Style the label to look like the icon */
+  .ai_image {
+    cursor: pointer;
+    display: inline-block;
+  }
 </style>
 <style>
   .chaterror{
@@ -314,3 +298,118 @@ $(document).ready(function () {
 </style>
 
 {% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+import google.generativeai as genai
+import os
+import retry
+from grpc._channel import _InactiveRpcError
+from django.http import JsonResponse
+from PIL import Image
+from django.http import HttpResponse
+
+
+# Create your views here.
+
+genai.configure(api_key=os.environ['API_KEY'])
+
+
+
+@retry.retry(exceptions=_InactiveRpcError, tries=9, delay=2, backoff=2)
+@login_required
+def chat(request):
+    model_text = genai.GenerativeModel('gemini-pro')
+    model_image = genai.GenerativeModel('gemini-pro-vision')
+    
+    if request.method == 'POST':
+        if 'user_input' in request.POST:
+            # Handle text form submission
+            user_input = request.POST.get('user_input', '')
+            response_text = model_text.generate_content(user_input).text
+
+            return render(request, './chat/chat.html', {'user_input': user_input, 'response_text': response_text})
+        elif 'imageUpload' in request.FILES:
+            # Handle image form submission
+            image_file = request.FILES['imageUpload']
+            
+            # Preprocess the image if necessary
+            pil_image = Image.open(image_file)
+            pil_image = pil_image.convert('RGB')
+            
+            # Pass the processed image to the model
+            response_image = model_image.generate_content(pil_image)
+            
+            # Extract the relevant information from the response
+            response_text_from_image = response_image.text
+
+            return render(request, './chat/chat.html', {'response_text_from_image': response_text_from_image})
+    
+    return render(request, './chat/chat.html')
+
+
+    <form method="post" id="chatFormimg" action="{% url 'chat' %}" class="formimage" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <input type="file" id="imageUpload" name="imageUpload" accept="image/*">
+      <button type="submit"><span class="material-symbols-outlined">arrow_forward</span></button>
+    </form>
+    
+    
+     
+    <div id="chatContainer">
+    {% if response_text_from_image %}
+    <p class="ai"><img class="img_logo_chat" src="{% static 'images/logo.png' %}"><strong>Kampian</strong><br>{{ response_text_from_image }}</p>
+    {% endif %}
+    </div>
+  
+    
+  
+        
+
+
+
+    from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+import google.generativeai as genai
+import os
+import retry
+from grpc._channel import _InactiveRpcError
+from django.http import JsonResponse
+
+
+# Create your views here.
+
+genai.configure(api_key=os.environ['API_KEY'])
+
+
+
+@retry.retry(exceptions=_InactiveRpcError, tries=9, delay=2, backoff=2)
+@login_required
+def chat(request):
+    modelai = genai.GenerativeModel('gemini-pro')
+    if request.method == 'POST':
+        # Get user input from the form
+        user_input = request.POST.get('user_input', '')
+
+        # Generate a response using Gemini AI
+        response = modelai.generate_content(user_input)
+
+        # Pass the response to the template
+        return JsonResponse({'user_input': user_input, 'response': response.text})
+    else:
+        # If it's a GET request, just render the empty form
+        return render(request, './chat/chat.html')
+
+

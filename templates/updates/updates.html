@@ -35,7 +35,7 @@
 
   {% for update in updates %}
   <div class="fluid-for-updates">
-
+<a href="{% url 'updatesview' update.id %}">
     <div class="update_image">
       {% if update.img %}
       <img src="{{ update.img.url }}" alt="{{ update.title }} Image" style="max-width: 300px;">
@@ -64,7 +64,7 @@
           {% endif %}
         </span> </p>
     </div>
-
+</a>
   </div>
   {% endfor %}
   {% else %}
@@ -73,6 +73,15 @@
 </div>
 
 <style>
+  .fluid-for-updates a{
+    text-decoration: none;
+    color:black;
+  }
+
+  body.dark-mode .fluid-for-updates a{
+    color:white;
+    }
+
   .delete-update {
     margin-left: 15px;
 
